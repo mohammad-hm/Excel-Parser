@@ -10,7 +10,7 @@ namespace excel_parser.Services
             Console.WriteLine($"Start reading Excel file: {filePath}");
 
             IWorkbook workbook = WorkbookFactory.Create(filePath);
-            ISheet sheet = workbook.GetSheet("Sheet1");
+            ISheet sheet = workbook.GetSheet("PernoPage");
 
             var persNumAndSumIndexAndworkFeiledDic = new Dictionary<string, Dictionary<string, int>>();
             var singlePersonNumber = string.Empty;
@@ -103,6 +103,52 @@ namespace excel_parser.Services
                     }
                 }
             }
+
+            foreach (var model in calculateModels)
+            {
+                switch (model.WorkGroup)
+                {
+                    case "اداري":
+                      //  Console.WriteLine($"Processing {model.WorkGroup} for PersonNumber: {model.PersonNumber}");
+                        break;
+
+                    case "پشتيباني":
+                        Console.WriteLine($"Processing for PersonNumber: {model.PersonNumber}");
+                        SumNumericFields(model);
+                        break;
+                        
+                    case "شناوري 7 تا 8":
+                       // Console.WriteLine($"Processing {model.WorkGroup} for PersonNumber: {model.PersonNumber}");
+                        break;
+                    case "ساعتي":
+                       // Console.WriteLine($"Processing {model.WorkGroup} for PersonNumber: {model.PersonNumber}");
+                        break;
+                    case "داود موسوي":
+                       // Console.WriteLine($"Processing {model.WorkGroup} for PersonNumber: {model.PersonNumber}");
+                        break;
+                    case "فني 8 صبح(بدون شناوري)?":
+                       // Console.WriteLine($"Processing {model.WorkGroup} for PersonNumber: {model.PersonNumber}");
+                        break;
+                    case "فني-شيراز":
+                       // Console.WriteLine($"Processing {model.WorkGroup} for PersonNumber: {model.PersonNumber}");
+                        break;
+                    case "خدمه7تا17":
+                       // Console.WriteLine($"Processing {model.WorkGroup} for PersonNumber: {model.PersonNumber}");
+                        break;
+                    case "شناوري 8-9":
+                        //Console.WriteLine($"Processing {model.WorkGroup} for PersonNumber: {model.PersonNumber}");
+                        break;
+                    case "wsg_2638_27":
+                     //   Console.WriteLine($"Processing {model.WorkGroup} for PersonNumber: {model.PersonNumber}");
+                        break;
+                    case "شناوري 7 تا 10":
+                     //   Console.WriteLine($"Processing {model.WorkGroup} for PersonNumber: {model.PersonNumber}");
+                        break;
+                    default:
+                        break;
+                }
+            }
+
         }
 
         private static string FindPersonNumber(IRow row)
@@ -170,6 +216,25 @@ namespace excel_parser.Services
         {
             ICell cell = row.GetCell(cellIndex);
             return cell?.ToString() ?? string.Empty;
+        }
+
+        private static void SumNumericFields(calculateModel model)
+        {
+            // Extract all numeric fields and sum them up
+            int sum = 0;
+            foreach (var property in typeof(calculateModel).GetProperties())
+            {
+                if (property.PropertyType == typeof(string) && property.Name != "PersonNumber" && property.Name != "WorkGroup")
+                {
+                    string value = (string)property.GetValue(model) ?? "0";
+                    if (int.TryParse(value, out int numericValue))
+                    {
+                        sum += numericValue;
+                    }
+                }
+            }
+
+            Console.WriteLine($"The sum of all field is:{sum}");
         }
     }
 
