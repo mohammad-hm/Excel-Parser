@@ -1,4 +1,5 @@
 ﻿using NPOI.SS.UserModel;
+using NPOI.XSSF.UserModel;
 using System.Text.RegularExpressions;
 
 namespace excel_parser.Services
@@ -109,40 +110,40 @@ namespace excel_parser.Services
                 switch (model.WorkGroup)
                 {
                     case "اداري":
-                      //  Console.WriteLine($"Processing {model.WorkGroup} for PersonNumber: {model.PersonNumber}");
+                        //  Console.WriteLine($"Processing {model.WorkGroup} for PersonNumber: {model.PersonNumber}");
                         break;
 
                     case "پشتيباني":
                         Console.WriteLine($"Processing for PersonNumber: {model.PersonNumber}");
                         SumNumericFields(model);
                         break;
-                        
+
                     case "شناوري 7 تا 8":
-                       // Console.WriteLine($"Processing {model.WorkGroup} for PersonNumber: {model.PersonNumber}");
+                        // Console.WriteLine($"Processing {model.WorkGroup} for PersonNumber: {model.PersonNumber}");
                         break;
                     case "ساعتي":
-                       // Console.WriteLine($"Processing {model.WorkGroup} for PersonNumber: {model.PersonNumber}");
+                        // Console.WriteLine($"Processing {model.WorkGroup} for PersonNumber: {model.PersonNumber}");
                         break;
                     case "داود موسوي":
-                       // Console.WriteLine($"Processing {model.WorkGroup} for PersonNumber: {model.PersonNumber}");
+                        // Console.WriteLine($"Processing {model.WorkGroup} for PersonNumber: {model.PersonNumber}");
                         break;
                     case "فني 8 صبح(بدون شناوري)?":
-                       // Console.WriteLine($"Processing {model.WorkGroup} for PersonNumber: {model.PersonNumber}");
+                        // Console.WriteLine($"Processing {model.WorkGroup} for PersonNumber: {model.PersonNumber}");
                         break;
                     case "فني-شيراز":
-                       // Console.WriteLine($"Processing {model.WorkGroup} for PersonNumber: {model.PersonNumber}");
+                        // Console.WriteLine($"Processing {model.WorkGroup} for PersonNumber: {model.PersonNumber}");
                         break;
                     case "خدمه7تا17":
-                       // Console.WriteLine($"Processing {model.WorkGroup} for PersonNumber: {model.PersonNumber}");
+                        // Console.WriteLine($"Processing {model.WorkGroup} for PersonNumber: {model.PersonNumber}");
                         break;
                     case "شناوري 8-9":
                         //Console.WriteLine($"Processing {model.WorkGroup} for PersonNumber: {model.PersonNumber}");
                         break;
                     case "wsg_2638_27":
-                     //   Console.WriteLine($"Processing {model.WorkGroup} for PersonNumber: {model.PersonNumber}");
+                        //   Console.WriteLine($"Processing {model.WorkGroup} for PersonNumber: {model.PersonNumber}");
                         break;
                     case "شناوري 7 تا 10":
-                     //   Console.WriteLine($"Processing {model.WorkGroup} for PersonNumber: {model.PersonNumber}");
+                        //   Console.WriteLine($"Processing {model.WorkGroup} for PersonNumber: {model.PersonNumber}");
                         break;
                     default:
                         break;
@@ -150,7 +151,37 @@ namespace excel_parser.Services
             }
 
         }
+        public static void WriteToExcel(string filePath, string sheetName)
+        {
+            Console.WriteLine("WriteToExcel start");
 
+            using (var fs = new FileStream(filePath, FileMode.Create, FileAccess.Write))
+            {
+                var workbook = new XSSFWorkbook();
+                var sheet = workbook.CreateSheet(sheetName);
+
+                // Specify row and cell for writing data
+                int row = 0;
+                int cell = 0;
+
+                var newRow = sheet.CreateRow(row++);
+                newRow.CreateCell(cell).SetCellValue("IsEnabled");
+                newRow.CreateCell(cell + 1).SetCellValue("yes");
+
+                newRow = sheet.CreateRow(row++);
+                newRow.CreateCell(cell).SetCellValue("NumberOfActiveClients");
+                newRow.CreateCell(cell + 1).SetCellValue("5");
+
+                newRow = sheet.CreateRow(row++);
+                newRow.CreateCell(cell).SetCellValue("ExpirationTime");
+                newRow.CreateCell(cell + 1).SetCellValue("test");
+
+                workbook.Write(fs);
+
+                Console.WriteLine($"Excel file written to: {filePath}");
+            }
+
+        }
         private static string FindPersonNumber(IRow row)
         {
             for (int j = 0; j < row.LastCellNum; j++)
