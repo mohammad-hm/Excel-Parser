@@ -4,7 +4,7 @@ public class OuutputModel()
     public string NameAndFamilly { get; set; } = string.Empty;
     public string TotalFinancialFunction { get; set; } = string.Empty;
     public string FractionOfWorkRush { get; set; } = string.Empty;
-    public string FractionOfWorkDelay { get; set; } = string.Empty;
+    public string FractionOfWorkAbcenc { get; set; } = string.Empty;
     public string UnpaidLeave { get; set; } = string.Empty;
     public string Overtime { get; set; } = string.Empty;
     public string DailyMission { get; set; } = string.Empty;
