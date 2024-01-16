@@ -15,47 +15,52 @@ var host = Host.CreateDefaultBuilder().ConfigureServices((hostContext, services)
 }).UseSerilog()
 .Build();
 
-#region Getting info
+//#region Getting info
 Log.Information("HELLO DEAR HR");
 
-Log.Information(":لطفا مسیر، اکسل مربوط به کد پرسنلی و گروه کاری را وارد نمایید");
-string perNumAndwrGroupfilePath = Console.ReadLine() ?? "";
-if (!System.IO.File.Exists(perNumAndwrGroupfilePath))
-{
-    Log.Information("مسیر وارد شده اشتباه می باشد و یا فایل وجود ندار.");
-    return;
-}
+////Log.Information(":لطفا مسیر، اکسل مربوط به کد پرسنلی و گروه کاری را وارد نمایید");
+//Log.Information("please enter the path of personal excel:");
+//string perNumAndwrGroupfilePath = Console.ReadLine() ?? "";
+//if (!System.IO.File.Exists(perNumAndwrGroupfilePath))
+//{
+//    Log.Information("مسیر وارد شده اشتباه می باشد و یا فایل وجود ندار.");
+//    return;
+//}
 
-Log.Information("لطفا مسیر اکسل کارکرد را وارد نمایید:");
-string mainFilePath = Console.ReadLine() ?? "";
-if (!System.IO.File.Exists(mainFilePath))
-{
-    Log.Information("مسیر وارد شده اشتباه می باشد و یا فایل وجود ندار.");
-    return;
-}
+////Log.Information("لطفا مسیر اکسل کارکرد را وارد نمایید:");
+//Log.Information("please enter the path of main excel:");
+//string mainFilePath = Console.ReadLine() ?? "";
+//if (!System.IO.File.Exists(mainFilePath))
+//{
+//    Log.Information("مسیر وارد شده اشتباه می باشد و یا فایل وجود ندار.");
+//    return;
+//}
 
-Log.Information("لطفا مسیر، اکسل مربوط به شب کاری و جمعه کاری را وارد نمایید:");
-string holidaysWorkFilePath = Console.ReadLine() ?? "";
-if (!System.IO.File.Exists(holidaysWorkFilePath))
-{
-    Log.Information("مسیر وارد شده اشتباه می باشد و یا فایل وجود ندار.");
-    return;
-}
+////Log.Information("لطفا مسیر، اکسل مربوط به شب کاری و جمعه کاری را وارد نمایید:");
+//Log.Information("please enter the path of night work excel:");
+//string holidaysWorkFilePath = Console.ReadLine() ?? "";
+//if (!System.IO.File.Exists(holidaysWorkFilePath))
+//{
+//    Log.Information("مسیر وارد شده اشتباه می باشد و یا فایل وجود ندار.");
+//    return;
+//}
 
-Log.Information("لطفا مسیر، اکسل ویژه را وارد نمایید:");
-string specialFilePath = Console.ReadLine() ?? "";
-if (!System.IO.File.Exists(specialFilePath))
-{
-    Log.Information("مسیر وارد شده اشتباه می باشد و یا فایل وجود ندار.");
-    return;
-}
-#endregion
+////Log.Information("لطفا مسیر، اکسل ویژه را وارد نمایید:");
+//Log.Information("please enter the path of custom excel:");
+//string specialFilePath = Console.ReadLine() ?? "";
+//if (!System.IO.File.Exists(specialFilePath))
+//{
+//    Log.Information("مسیر وارد شده اشتباه می باشد و یا فایل وجود ندار.");
+//    return;
+//}
+//#endregion
 
 using (var scope = host.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     var dataService = services.GetRequiredService<ManagerService>();
-    dataService.Execute(perNumAndwrGroupfilePath, mainFilePath, holidaysWorkFilePath, specialFilePath);
+  //  dataService.Execute(perNumAndwrGroupfilePath, mainFilePath, holidaysWorkFilePath, specialFilePath);
+    dataService.Execute("C:\\Users\\mhm\\Documents\\GitHub\\Excel-Parser\\excel-parser\\Files\\perwork.xlsx", "C:\\Users\\mhm\\Documents\\GitHub\\Excel-Parser\\excel-parser\\Files\\haji2.xlsx", "C:\\Users\\mhm\\Documents\\GitHub\\Excel-Parser\\excel-parser\\Files\\nightwork.xlsx", "C:\\Users\\mhm\\Documents\\GitHub\\Excel-Parser\\excel-parser\\Files\\custom.xlsx");
 }
 
 host.Run();

@@ -1,5 +1,6 @@
 ﻿using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
+using System.Globalization;
 using System.Text.RegularExpressions;
 
 namespace excel_parser.Services
@@ -168,52 +169,58 @@ namespace excel_parser.Services
         private static Dictionary<string, string> TehranProcessor(calculateModel model)
         {
             var resDic = new Dictionary<string, string>();
-            var mainOvertime = Convert.ToInt32(model.OvertimeAuthorizedNormal) + Convert.ToInt32(model.OvertimeAuthorizedHolidays) + Convert.ToInt32(model.OvertimeOnMission);
-            var delay = Convert.ToInt32(model.FractionOfWorkDelay) - Convert.ToInt32(model.OvertimeUnauthorizedNormal);
+
+
+            var mainOvertime = ConvertToTotalMinutes(model.OvertimeAuthorizedNormal) +
+                               ConvertToTotalMinutes(model.OvertimeAuthorizedHolidays) +
+                               ConvertToTotalMinutes(model.OvertimeOnMission);
+
+            var delay = ConvertToTotalMinutes(model.FractionOfWorkDelay) - ConvertToTotalMinutes(model.OvertimeUnauthorizedNormal);
+
             if (delay >= 0)
             {
-                var result = mainOvertime - delay - (Convert.ToInt32(model.AuthorizedRush) * 3) - (Convert.ToInt32(model.FractionOfWorkUnauthorizedExit) * 3);
+                var result = mainOvertime - delay - (ConvertToTotalMinutes(model.AuthorizedRush) * 3) -
+                              (ConvertToTotalMinutes(model.FractionOfWorkUnauthorizedExit) * 3);
                 resDic.Add(model.PersonNumber, result.ToString());
             }
             else
             {
-                var rush = (Convert.ToInt32(model.FractionOfWorkRush) * 3) - Math.Abs(delay);
+                var rush = (ConvertToTotalMinutes(model.FractionOfWorkRush) * 3) - Math.Abs(delay);
+
                 if (rush >= 0)
                 {
-                    var result = mainOvertime - rush - (Convert.ToInt32(model.FractionOfWorkUnauthorizedExit) * 3);
+                    var result = mainOvertime - rush - (ConvertToTotalMinutes(model.FractionOfWorkUnauthorizedExit) * 3);
                     resDic.Add(model.PersonNumber, result.ToString());
                 }
                 else
                 {
-                    var exit = (Convert.ToInt32(model.FractionOfWorkUnauthorizedExit) * 3) - (Math.Abs(rush));
+                    var exit = (ConvertToTotalMinutes(model.FractionOfWorkUnauthorizedExit) * 3) - (Math.Abs(rush));
                     var result = mainOvertime - exit;
+
                     if (result > 0)
                     {
                         resDic.Add(model.PersonNumber, result.ToString());
                     }
                 }
             }
+
             return resDic;
         }
+
 
         private static Dictionary<string, string> GarmDarehProcessor(calculateModel model)
         {
             var resDic = new Dictionary<string, string>();
-            var mainOvertime = Convert.ToInt32(model.OvertimeAuthorizedNormal) + Convert.ToInt32(model.OvertimeAuthorizedHolidays) + Convert.ToInt32(model.OvertimeOnMission);
-            var delay = Convert.ToInt32(model.FractionOfWorkDelay) - Convert.ToInt32(model.OvertimeUnauthorizedNormal);
-            var rushMain = 0;
-            if (Convert.ToInt32(model.FractionOfWorkRush) - 5 >= 0)
-            {
-                rushMain = Convert.ToInt32(model.FractionOfWorkRush) - 5;
-            }
-            else { rushMain = 0; }
 
-            var exitMain = 0;
-            if (Convert.ToInt32(model.FractionOfWorkUnauthorizedExit) - 3 >= 0)
-            {
-                exitMain = Convert.ToInt32(model.FractionOfWorkUnauthorizedExit) - 3;
-            }
-            else { exitMain = 0; }
+            var mainOvertime = ConvertToTotalMinutes(model.OvertimeAuthorizedNormal) +
+                               ConvertToTotalMinutes(model.OvertimeAuthorizedHolidays) +
+                               ConvertToTotalMinutes(model.OvertimeOnMission);
+
+            var delay = ConvertToTotalMinutes(model.FractionOfWorkDelay) - ConvertToTotalMinutes(model.OvertimeUnauthorizedNormal);
+
+            // Calculate rushMain and exitMain using ConvertToTotalMinutes helper function
+            var rushMain = Math.Max(ConvertToTotalMinutes(model.FractionOfWorkRush) - 5, 0);
+            var exitMain = Math.Max(ConvertToTotalMinutes(model.FractionOfWorkUnauthorizedExit) - 3, 0);
 
             if (delay >= 0)
             {
@@ -223,6 +230,7 @@ namespace excel_parser.Services
             else
             {
                 var rush = (rushMain * 3) - Math.Abs(delay);
+
                 if (rush >= 0)
                 {
                     var result = mainOvertime - rush - (exitMain * 3);
@@ -230,16 +238,41 @@ namespace excel_parser.Services
                 }
                 else
                 {
-                    var exit = (exitMain * 3) - (Math.Abs(rush));
+                    var exit = (exitMain * 3) - Math.Abs(rush);
                     var result = mainOvertime - exit;
+
                     if (result > 0)
                     {
                         resDic.Add(model.PersonNumber, result.ToString());
                     }
                 }
             }
+
             return resDic;
         }
+
+        private static int ConvertToTotalMinutes(string value)
+        {
+            if (string.IsNullOrEmpty(value))
+            {
+                return 0;
+            }
+
+            if (value.Contains(':'))
+            {
+                // Check if the value has the format 'hh:mm'
+                if (TimeSpan.TryParseExact(value, @"h\:mm", CultureInfo.InvariantCulture, out var timeSpan))
+                {
+                    // Convert the time duration to total minutes
+                    return (int)timeSpan.TotalMinutes;
+                }
+            }
+
+            // If not in 'hh:mm' format or regular integer conversion, assume it's in hours and convert to minutes
+            return int.TryParse(value, out var hours) ? hours * 60 : 0;
+        }
+
+
 
     }
 

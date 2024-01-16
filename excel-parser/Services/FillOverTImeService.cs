@@ -5,6 +5,23 @@ public static class FillOverTimeService
 {
     public static IWorkbook Execute(Dictionary<string, string> calculateOverTime, IWorkbook workbook)
     {
+        
+        foreach (var key in calculateOverTime.Keys.ToList())
+        {
+            if (int.TryParse(calculateOverTime[key], out var value))
+            {
+                // Check if the value is negative, replace with "0"
+                if (value < 0)
+                {
+                    calculateOverTime[key] = "0";
+                }
+            }
+            else
+            {
+                // Handle the case where the value is not a valid integer
+                calculateOverTime[key] = "0";
+            }
+        }
 
         // Create a new worksheet in the output workbook
         ISheet outputSheet = workbook.GetSheet("Output");

@@ -16,11 +16,11 @@ public class ManagerService(ILogger<ManagerService> logger)
     {
         this.logger.LogDebug("Manager service started");
 
-        // Create empty workbook with spicific headers
+        // Create empty workbook with specific headers
         var workbook = InitialEmptyExcell.Execute();
 
-        // Fill personal number to output excell
-        //var fillperNumAndwrGroupWorkGroup = FillPerNumber.Execute(perNumAndwrGroupfilePath, workbook);
+        // Fill personal number to output excel
+        var fillperNumAndwrGroupWorkGroup = FillPerNumber.Execute(perNumAndwrGroupfilePath, workbook);
 
         // Fill work group dictionary
         var workGroupDic = FiilWorkGroupDic.Execute(perNumAndwrGroupfilePath);
@@ -29,22 +29,22 @@ public class ManagerService(ILogger<ManagerService> logger)
         var calculateOverTime = OverTimeCalculate.Excute(workGroupDic, mainFilePath);
 
         // Fill over time
-       // var fillOverTime = FillOverTimeService.Execute(calculateOverTime, fillperNumAndwrGroupWorkGroup);
+        var fillOverTime = FillOverTimeService.Execute(calculateOverTime, fillperNumAndwrGroupWorkGroup);
 
-        // Fill zero value for spicifig columns
-        // var fillZzervoValues = FillZeroCell.Execute(fillOverTime);
+        // Fill zero value for specific columns
+        var fillZzervoValues = FillZeroCell.Execute(fillOverTime);
 
-        // // Fill DailyMission, FractionOfWorkAbcenc, TotalFinancialFunction
-        // var ProcessOfSpecialExcell = ProcessorOfSpecialExcell.Execute(specialFilePath, fillZzervoValues);
+        // Fill DailyMission, FractionOfWorkAbcenc, TotalFinancialFunction
+        var ProcessOfSpecialExcell = ProcessorOfSpecialExcell.Execute(specialFilePath, fillZzervoValues);
 
-        // // Fill WorkingHolidays and WorkingAtNight fields
-        // var ProcessOfNightHolidayExcell = NightHolidayWorkService.Execute(holidaysWorkFilePath, ProcessOfSpecialExcell);
+        // Fill WorkingHolidays and WorkingAtNight fields
+        var ProcessOfNightHolidayExcell = NightHolidayWorkService.Execute(holidaysWorkFilePath, ProcessOfSpecialExcell);
 
-        // // Save the workbook to a file
-        // using (FileStream stream = new FileStream("Output.xlsx", FileMode.Create, FileAccess.Write))
-        // {
-        //     ProcessOfNightHolidayExcell.Write(stream);
-        // }
+        // Save the workbook to a file
+        using (FileStream stream = new FileStream("Output.xlsx", FileMode.Create, FileAccess.Write))
+        {
+            ProcessOfNightHolidayExcell.Write(stream);
+        }
 
     }
 }
