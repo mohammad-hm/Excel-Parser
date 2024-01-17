@@ -97,7 +97,7 @@ namespace excel_parser.Services
 
             }
 
-
+            // Fill final dictionary that have personal number and overtime
             foreach (var model in calculateModels)
             {
                 switch (model.WorkGroup)
@@ -271,8 +271,6 @@ namespace excel_parser.Services
             // If not in 'hh:mm' format or regular integer conversion, assume it's in hours and convert to minutes
             return int.TryParse(value, out var hours) ? hours * 60 : 0;
         }
-
-
 
     }
 

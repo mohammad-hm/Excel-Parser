@@ -5,7 +5,7 @@ public static class FiilWorkGroupDic
 {
     private static readonly Dictionary<string, string> workGroupDic = [];
 
-    public static Dictionary<string, string> Execute(string perNumAndwrGroupfilePath)
+    public static Dictionary<string, string> Execute(string perNumAndwrGroupfilePath, IWorkbook workbook)
     {
 
         // Create a workbook object from the input file
@@ -20,9 +20,16 @@ public static class FiilWorkGroupDic
             // Get the current row
             IRow inputRow = inputSheet.GetRow(i+1);
 
-            string personNumber = inputRow.GetCell(1).ToString() ?? "";
-            string workGroup = inputRow.GetCell(4).ToString() ?? "";
-            workGroupDic.Add(personNumber, workGroup);
+            if (inputRow != null)
+            {
+                string personNumber = inputRow.GetCell(1)?.ToString() ?? "";
+                string workGroup = inputRow.GetCell(4)?.ToString() ?? "";
+
+                if (!string.IsNullOrEmpty(personNumber) && !string.IsNullOrEmpty(workGroup))
+                {
+                    workGroupDic[personNumber] = workGroup;
+                }
+            }
         }
         return workGroupDic;
     }

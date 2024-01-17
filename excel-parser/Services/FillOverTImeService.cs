@@ -5,7 +5,7 @@ public static class FillOverTimeService
 {
     public static IWorkbook Execute(Dictionary<string, string> calculateOverTime, IWorkbook workbook)
     {
-        
+        // Check if the value of calculateOverTime dictionary does not be negative
         foreach (var key in calculateOverTime.Keys.ToList())
         {
             if (int.TryParse(calculateOverTime[key], out var value))
@@ -36,11 +36,10 @@ public static class FillOverTimeService
             var perCell = outputRow.GetCell(0).ToString();
 
             // Extract overtime map to specific personal number
-            var overTime = calculateOverTime.ContainsKey(perCell ?? "") ? calculateOverTime[perCell ?? ""] : string.Empty;
+            var overTime = calculateOverTime.ContainsKey(perCell ?? "") ? calculateOverTime[perCell ?? ""] : "0";
 
             // Create cells in the output row and write the values
-            outputRow.CreateCell(6).SetCellValue("overTime");
-
+            outputRow.CreateCell(6).SetCellValue(overTime);
         }
 
         return workbook;

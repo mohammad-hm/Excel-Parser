@@ -13,7 +13,7 @@ public static class InitialEmptyExcell
 
         // Create a header row with the property names of the model class
         IRow headerRow = sheet.CreateRow(0);
-        headerRow.CreateCell(0).SetCellValue("ssssکد");
+        headerRow.CreateCell(0).SetCellValue("کد");
         headerRow.CreateCell(1).SetCellValue("نام و نام خانوادگی");
         headerRow.CreateCell(2).SetCellValue("کارکرد ورزانه");
         headerRow.CreateCell(3).SetCellValue("کارکرد کسر تعجیل");

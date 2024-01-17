@@ -15,7 +15,7 @@ var host = Host.CreateDefaultBuilder().ConfigureServices((hostContext, services)
 }).UseSerilog()
 .Build();
 
-//#region Getting info
+#region Getting info
 Log.Information("HELLO DEAR HR");
 
 ////Log.Information(":لطفا مسیر، اکسل مربوط به کد پرسنلی و گروه کاری را وارد نمایید");
@@ -53,14 +53,14 @@ Log.Information("HELLO DEAR HR");
 //    Log.Information("مسیر وارد شده اشتباه می باشد و یا فایل وجود ندار.");
 //    return;
 //}
-//#endregion
+#endregion
 
 using (var scope = host.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     var dataService = services.GetRequiredService<ManagerService>();
-  //  dataService.Execute(perNumAndwrGroupfilePath, mainFilePath, holidaysWorkFilePath, specialFilePath);
-    dataService.Execute("C:\\Users\\mhm\\Documents\\GitHub\\Excel-Parser\\excel-parser\\Files\\perwork.xlsx", "C:\\Users\\mhm\\Documents\\GitHub\\Excel-Parser\\excel-parser\\Files\\haji2.xlsx", "C:\\Users\\mhm\\Documents\\GitHub\\Excel-Parser\\excel-parser\\Files\\nightwork.xlsx", "C:\\Users\\mhm\\Documents\\GitHub\\Excel-Parser\\excel-parser\\Files\\custom.xlsx");
+    //dataService.Execute(perNumAndwrGroupfilePath, mainFilePath, holidaysWorkFilePath, specialFilePath);
+    dataService.Execute("C:\\Users\\mhm\\Documents\\GitHub\\Excel-Parser\\excel-parser\\Files\\main\\perwork.xlsx", "C:\\Users\\mhm\\Documents\\GitHub\\Excel-Parser\\excel-parser\\Files\\main\\haji2.xlsx", "C:\\Users\\mhm\\Documents\\GitHub\\Excel-Parser\\excel-parser\\Files\\main\\nightwork.xlsx", "C:\\Users\\mhm\\Documents\\GitHub\\Excel-Parser\\excel-parser\\Files\\main\\custom.xls");
 }
 
 host.Run();
